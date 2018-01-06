@@ -12,7 +12,7 @@ namespace OPAS_ETL_PUSH
     class DAL
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["OPAS_ETL_Connection"].ConnectionString);
-        private IDbCommand cmd = new SqlCommand();
+        private static IDbCommand cmd = new SqlCommand();
         private string strConnectionString = "";
         private bool handleErrors = false;
         private string strLastError = "";

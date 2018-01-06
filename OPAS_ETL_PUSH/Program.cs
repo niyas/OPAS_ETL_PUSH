@@ -28,17 +28,24 @@ namespace OPAS_ETL_PUSH
          */
         private static void pushDataToWeeklyTable()
         {
-            Console.WriteLine("Insering the json data to WeeklyData table....");
-            string jsonData = readDataFromJson();
-            DAL objDal = new DAL();
-            if(jsonData.Length > 0)
+            try
             {
-                DataTable dt = (DataTable)JsonConvert.DeserializeObject(jsonData, (typeof(DataTable)));
-                objDal.AddParameter("@IncidentManagement", dt);
-                objDal.CommandText = "usp_IncidentManagement_WeeklyDataInsert";
-                objDal.ExecuteNonQuery();
+                Console.WriteLine("Insering the json data to WeeklyData table....");
+                string jsonData = readDataFromJson();
+                DAL objDal = new DAL();
+                if (jsonData.Length > 0)
+                {
+                    DataTable dt = (DataTable)JsonConvert.DeserializeObject(jsonData, (typeof(DataTable)));
+                    objDal.AddParameter("@IncidentManagement", dt);
+                    objDal.ExecuteNonQuery("usp_IncidentManagement_WeeklyDataInsert");
+                }
+                Console.WriteLine("Insering the json data to WeeklyData table completed....");
             }
-            Console.WriteLine("Insering the json data to WeeklyData table completed....");
+            catch(Exception ex)
+            {
+
+            }
+            
         }
 
 
