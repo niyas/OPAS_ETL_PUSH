@@ -13,16 +13,16 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
+OPAS_ETL_PUSH/[Dd]ebug/
+OPAS_ETL_PUSH/[Dd]ebugPublic/
+OPAS_ETL_PUSH/[Rr]elease/
+OPAS_ETL_PUSH/[Rr]eleases/
+OPAS_ETL_PUSH/x64/
+OPAS_ETL_PUSHx86/
+OPAS_ETL_PUSH/bld/
+OPAS_ETL_PUSH/[Bb]in/
+OPAS_ETL_PUSH/[Oo]bj/
+OPAS_ETL_PUSH/[Ll]og/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -30,8 +30,8 @@ bld/
 #wwwroot/
 
 # MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+OPAS_ETL_PUSH/[Tt]est[Rr]esult*/
+OPAS_ETL_PUSH/[Bb]uild[Ll]og.*
 
 # NUNIT
 *.VisualState.xml
