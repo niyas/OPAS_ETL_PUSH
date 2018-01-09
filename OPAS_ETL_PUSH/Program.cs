@@ -32,12 +32,24 @@ namespace OPAS_ETL_PUSH
             {
                 Console.WriteLine("Insering the json data to WeeklyData table....");
                 string jsonData = readDataFromJson();
-                DAL objDal = new DAL();
                 if (jsonData.Length > 0)
                 {
                     DataTable dt = (DataTable)JsonConvert.DeserializeObject(jsonData, (typeof(DataTable)));
-                    objDal.AddParameter("@IncidentManagement", dt);
-                    objDal.ExecuteNonQuery("usp_IncidentManagement_WeeklyDataInsert");
+                    mergeDataToArchive();
+                    foreach(DataRow dr in dt.Rows)
+                    {
+                        DAL objDal = new DAL();
+                        objDal.AddParameter("@IncidentId", dr[0].ToString());
+                        objDal.AddParameter("@NotificationText", dr[1].ToString());
+                        objDal.AddParameter("@SeverityNumber", dr[2].ToString());
+                        objDal.AddParameter("@Status", dr[3].ToString());
+                        objDal.AddParameter("@SuspendReason", dr[4].ToString());
+                        objDal.AddParameter("@Assignee", dr[5].ToString());
+                        objDal.AddParameter("@AssigneeGroup", dr[6].ToString());
+                        objDal.ExecuteNonQuery("usp_IncidentManagement_WeeklyDataInsert");
+                        objDal.Dispose();
+                    }
+                    
                 }
                 Console.WriteLine("Insering the json data to WeeklyData table completed....");
             }
@@ -70,6 +82,19 @@ namespace OPAS_ETL_PUSH
             return Json;
         }
 
+        /**
+         * 
+         * Merge weekly data to archive table
+         * 
+         * @param {Void}
+         * @return {Void}
+         */
+        private static void mergeDataToArchive()
+        {
+            DAL objDal = new DAL();
+            objDal.CommandText = "usp_IncidentManagement_DataInsert";
+            objDal.ExecuteNonQuery();
+        }
         private static void triggerEmailAlert()
         {
             DAL objDal = new DAL();
