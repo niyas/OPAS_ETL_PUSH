@@ -35,33 +35,40 @@ ALTER PROCEDURE [dbo].[usp_IncidentManagement_DataInsert]
 AS
 Begin
 
-;MERGE AITool.dbo.[IncidentManagement_Data] AS TARGET_TABLE  
-USING (SELECT  
-  [IncidentId],
-  [NotificationText],
-  [SeverityNumber],
-  [Status],
-  [SuspendReason],
-  [Assignee],
-  [AssigneeGroup],
-  CreatedDateTime
-  FROM  AITool.dbo.[IncidentManagement_WeeklyData]
- ) AS SOURCE_TABLE  
- ON SOURCE_TABLE.[IncidentId] = TARGET_TABLE.[IncidentId]
-WHEN MATCHED THEN UPDATE  
-SET [NotificationText]=SOURCE_TABLE.[NotificationText],  
-[SeverityNumber]=SOURCE_TABLE.[SeverityNumber],
-[Status]=SOURCE_TABLE.[Status],
-[SuspendReason]=SOURCE_TABLE.[SuspendReason],
-[Assignee]=SOURCE_TABLE.[Assignee],
-[AssigneeGroup]=SOURCE_TABLE.[AssigneeGroup] ,
-CreatedDateTime = SOURCE_TABLE.CreatedDateTime,
-MergeDateTime = getdate()
-WHEN NOT MATCHED THEN INSERT ([IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,MergeDateTime) 
-VALUES 
-([IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,getdate());
+IF NOT EXISTS
+(
+select 1
+from AITool.dbo.[IncidentManagement_Data] ID
+inner join AITool.dbo.[IncidentManagement_WeeklyData] IWD
+on IWD.[IncidentId] = ID.[IncidentId]
+)
+Begin
 
- 
-Truncate Table [IncidentManagement_WeeklyData]
- 
+insert into AITool.dbo.[IncidentManagement_Data]
+([IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,MergeDateTime) 
+select 
+[IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,getdate()
+From AITool.dbo.[IncidentManagement_WeeklyData]
+
+end 
+
+else 
+
+begin
+
+update ID
+set [NotificationText]=IWD.[NotificationText],  
+[SeverityNumber]=IWD.[SeverityNumber],
+[Status]=IWD.[Status],
+[SuspendReason]=IWD.[SuspendReason],
+[Assignee]=IWD.[Assignee],
+[AssigneeGroup]=IWD.[AssigneeGroup] ,
+CreatedDateTime = IWD.CreatedDateTime,
+MergeDateTime = getdate()
+from AITool.dbo.[IncidentManagement_Data] ID
+inner join AITool.dbo.[IncidentManagement_WeeklyData] IWD
+on IWD.[IncidentId] = ID.[IncidentId]
+
+END
+
 END 
