@@ -104,25 +104,24 @@ namespace OPAS_ETL_PUSH
             foreach (DataRow dr in dt.Rows)
             {
                 string url = baseUrl + dr[0].ToString().Replace(" ", "");
+                sendEmail(url, dr[1].ToString(), dr[0].ToString());
             }
         }
 
-        private static void sendEmail(string url, string email)
+        private static void sendEmail(string url, string email, string name)
         {
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient();
-
             mail.From = new MailAddress("niyasatwork@gmail.com");
             mail.To.Add("niyasatwork@gmail.com");
-            mail.Subject = "Test Mail";
-            mail.Body = "This is for testing SMTP mail from GMAIL";
-
+            mail.Subject = "Ticket Automation Email";
+            mail.Body = "Hi " + name + ",<br/> Please update your tickets using the following link below. <br/>" + url;
+            mail.IsBodyHtml = true;    
             SmtpServer.Host = "smtp.gmail.com";
-            SmtpServer.Port = 465;
+            SmtpServer.Port = 25;
             SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
             SmtpServer.Credentials = new System.Net.NetworkCredential("niyasatwork@gmail.com", "YourPassword");
             SmtpServer.UseDefaultCredentials = false;
-            SmtpServer.EnableSsl = true;
             SmtpServer.Send(mail);
         }
     }
