@@ -35,40 +35,12 @@ ALTER PROCEDURE [dbo].[usp_IncidentManagement_DataInsert]
 AS
 Begin
 
-IF NOT EXISTS
-(
-select 1
-from AITool.dbo.[IncidentManagement_Data] ID
-inner join AITool.dbo.[IncidentManagement_WeeklyData] IWD
-on IWD.[IncidentId] = ID.[IncidentId]
-)
-Begin
-
-insert into AITool.dbo.[IncidentManagement_Data]
-([IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,MergeDateTime) 
-select 
-[IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,getdate()
-From AITool.dbo.[IncidentManagement_WeeklyData]
-
-end 
-
-else 
-
-begin
-
-update ID
-set [NotificationText]=IWD.[NotificationText],  
-[SeverityNumber]=IWD.[SeverityNumber],
-[Status]=IWD.[Status],
-[SuspendReason]=IWD.[SuspendReason],
-[Assignee]=IWD.[Assignee],
-[AssigneeGroup]=IWD.[AssigneeGroup] ,
-CreatedDateTime = IWD.CreatedDateTime,
-MergeDateTime = getdate()
-from AITool.dbo.[IncidentManagement_Data] ID
-inner join AITool.dbo.[IncidentManagement_WeeklyData] IWD
-on IWD.[IncidentId] = ID.[IncidentId]
-
-END
-
+	insert into AITool.dbo.[IncidentManagement_Data]
+	([IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,MergeDateTime) 
+	select 
+	[IncidentId],[NotificationText],[SeverityNumber],[Status],[SuspendReason],[Assignee],[AssigneeGroup],CreatedDateTime,getdate()
+	From AITool.dbo.[IncidentManagement_WeeklyData]
+	
+	Truncate Table IncidentManagement_WeeklyData
 END 
+
