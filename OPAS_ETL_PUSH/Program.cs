@@ -95,6 +95,8 @@ namespace OPAS_ETL_PUSH
             objDal.CommandText = "usp_IncidentManagement_DataInsert";
             objDal.ExecuteNonQuery();
         }
+
+        //Send Email for all assignee
         private static void triggerEmailAlert()
         {
             DAL objDal = new DAL();
@@ -108,12 +110,20 @@ namespace OPAS_ETL_PUSH
             }
         }
 
+        /**
+         * Send Email
+         * 
+         * @params {String} Url
+         * @params {String} email
+         * @params {String} name
+         * @returns {Void}
+         */
         private static void sendEmail(string url, string email, string name)
         {
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient();
             mail.From = new MailAddress("niyasatwork@gmail.com");
-            mail.To.Add("niyasatwork@gmail.com");
+            mail.To.Add(email);
             mail.Subject = "Ticket Automation Email";
             mail.Body = "Hi " + name + ",<br/> Please update your tickets using the following link below. <br/>" + url;
             mail.IsBodyHtml = true;    
