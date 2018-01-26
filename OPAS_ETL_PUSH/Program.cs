@@ -49,7 +49,7 @@ namespace OPAS_ETL_PUSH
                         objDal.ExecuteNonQuery("usp_IncidentManagement_WeeklyDataInsert");
                         objDal.Dispose();
                     }
-                    
+                    updatePreviousValues();
                 }
                 Console.WriteLine("Insering the json data to WeeklyData table completed....");
             }
@@ -58,6 +58,13 @@ namespace OPAS_ETL_PUSH
 
             }
             
+        }
+
+        private static void updatePreviousValues()
+        {
+            DAL objDal = new DAL();
+            objDal.CommandText = "usp_UpdatePreviousValues";
+            objDal..ExecuteNonQuery();
         }
 
 
